@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Navigation from './Navigation';
 import Home from './Home';
+import Signin from './Signin';
+import Singup from './Signup';
 import Image from './Image';
 
 import '../css/bootstrap.min.css';
@@ -9,27 +11,46 @@ class App extends Component {
   constructor()
   {
     super();
-      this.state = {
-        'img':''
-      }
+    this.state = {
+      input:'',
+      isSignIn:false,
+      route:'signup'
+    }
   }
 
   changeimg = (event) =>{
-    this.setState({'img':event.target.value});
-    console.log(event.target.value);
+    this.setState({input:event.target.value});
   }
 
   onclickevent = (event) =>{
-    this.changeimg();
-    console.log('on click');
+    console.log('event');
+  }
+
+  onChangeRoute = (route) => {
+    if(route==='signout'){
+      this.setState({isSignIn:false});      
+    }else if(route==='home'){
+      this.setState({isSignIn:true});
+    }
+    this.setState({route:route});
   }
 
   render() {
-    const {img} = this.state;
+    const {input, isSignIn, route} = this.state;
+    console.log("state sdfg "+isSignIn);
     return (<>
-      <Navigation />
-      <Home onchangeimg={this.changeimg} clickfunction={this.onclickevent}/>
-      <Image img={img}/>
+      <Navigation onChangeRoute={this.onChangeRoute} isSignIn={isSignIn}/>
+      {route==='home'
+       ?<div>
+          <Home onchangeimg={this.changeimg} clickfunction={this.onclickevent}/>
+          <Image img={input}/> 
+        </div>
+       :(
+         route==='signup'
+        ? <Singup onChangeRoute={this.onChangeRoute}/>
+        : <Signin  onChangeRoute={this.onChangeRoute}/>
+       )
+      }
     </>);
   }
 }
